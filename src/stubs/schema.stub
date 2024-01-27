@@ -1,0 +1,20 @@
+<?php
+
+use App\Lib\Schema\Database\DeclarativeSchema;
+use App\Lib\Schema\Database\Table;
+use Doctrine\DBAL\Types\Types;
+
+return new class extends DeclarativeSchema {
+    function declare(): Table
+    {
+        $table = new Table('{{table}}');
+
+        $table->addId();
+
+
+
+        $table->addTimestamps();
+
+        return $table;
+    }
+};

@@ -1,0 +1,35 @@
+{
+    "name": "micheljonkman/declarative-schema",
+    "version": "0.1.0",
+    "description": "",
+    "keywords": [
+        "MichelJonkman",
+        "dbal-schema"
+    ],
+    "homepage": "https://github.com/micheljonkman/declarative-schema",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michel Jonkman",
+            "email": "mj.99@live.nl",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "doctrine/dbal": "^3.6.2"
+    },
+    "require-dev": {
+    },
+    "autoload": {
+        "psr-4": {
+            "MichelJonkman\\DeclarativeSchema\\": "src"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {}
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
