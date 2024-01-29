@@ -5,6 +5,7 @@ namespace MichelJonkman\DeclarativeSchema\Database;
 use Closure;
 use InvalidArgumentException;
 use Jawira\CaseConverter\Convert;
+use MichelJonkman\DeclarativeSchema\Exceptions\Exception;
 
 class SchemaCreator
 {
@@ -40,12 +41,14 @@ class SchemaCreator
             $schemaFiles = glob($schemaPath.'/*.php');
 
             foreach ($schemaFiles as $migrationFile) {
-                require_once $migrationFile;
-            }
-        }
+                /** @var DeclarativeSchema $schema */
+                $schema = require_once $migrationFile;
+                $table = $schema->declare();
 
-        if (class_exists($className = $this->getClassName($name))) {
-            throw new InvalidArgumentException("A {$className} class already exists.");
+                if($table->getName() === $name) {
+                    throw new Exception("Table \"{$name}\" already exists");
+                }
+            }
         }
     }
 
@@ -74,11 +77,6 @@ class SchemaCreator
         }
 
         return $stub;
-    }
-
-    protected function getClassName(string $name): string
-    {
-        return (new Convert($name))->toPascal();
     }
 
     protected function getPath(string $name, string $path): string

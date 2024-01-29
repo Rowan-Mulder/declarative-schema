@@ -6,7 +6,6 @@ use MichelJonkman\DeclarativeSchema\Console\MakeSchemaCommand;
 use MichelJonkman\DeclarativeSchema\Database\ConnectionManager;
 use MichelJonkman\DeclarativeSchema\Database\SchemaCreator;
 use MichelJonkman\DeclarativeSchema\Database\SchemaMigrator;
-use MichelJonkman\DeclarativeSchema\Database\SchemaMigratorFactory;
 use MichelJonkman\DeclarativeSchema\Schema;
 use Symfony\Component\Console\Application;
 use function DI\autowire;
