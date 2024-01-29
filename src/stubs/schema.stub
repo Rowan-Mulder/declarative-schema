@@ -9,11 +9,11 @@ return new class extends DeclarativeSchema {
     {
         $table = new Table('{{table}}');
 
-        $table->addId();
+        $table->id();
 
 
 
-        $table->addTimestamps();
+        $table->timestamps();
 
         return $table;
     }

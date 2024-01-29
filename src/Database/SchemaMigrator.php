@@ -9,7 +9,6 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\SchemaDiff;
 use Doctrine\DBAL\Schema\SchemaException;
 use MichelJonkman\DeclarativeSchema\Exceptions\DeclarativeSchemaException;
-use MichelJonkman\DeclarativeSchema\Models\SchemaTable;
 
 class SchemaMigrator
 {
@@ -50,8 +49,6 @@ class SchemaMigrator
             if (!$declaration instanceof DeclarativeSchema) {
                 throw new DeclarativeSchemaException("Declaration $file does not return a valid DeclarativeSchema class.");
             }
-
-            $declaration->init($this->schemaManager);
 
             $tables[] = $declaration->declare();
         }
