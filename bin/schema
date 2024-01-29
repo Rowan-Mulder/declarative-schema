@@ -1,0 +1,62 @@
+#!/usr/bin/env php
+<?php
+
+use DI\ContainerBuilder;
+use MichelJonkman\DeclarativeSchema\Console\MakeSchemaCommand;
+use MichelJonkman\DeclarativeSchema\Database\ConnectionManager;
+use MichelJonkman\DeclarativeSchema\Database\SchemaCreator;
+use MichelJonkman\DeclarativeSchema\Database\SchemaMigrator;
+use MichelJonkman\DeclarativeSchema\Database\SchemaMigratorFactory;
+use MichelJonkman\DeclarativeSchema\Schema;
+use Symfony\Component\Console\Application;
+use function DI\autowire;
+
+
+$autoloadFiles = [__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../autoload.php'];
+
+if (isset($GLOBALS['_composer_autoload_path'])) {
+    array_unshift($autoloadFiles, $GLOBALS['_composer_autoload_path']);
+}
+
+$loader = null;
+
+foreach ($autoloadFiles as $autoloadFile) {
+    if (file_exists($autoloadFile)) {
+        $loader = require $autoloadFile;
+        break;
+    }
+}
+
+if (!$loader) {
+    throw new RuntimeException('Composer autoload not found');
+}
+
+
+$builder = new ContainerBuilder();
+
+$builder->addDefinitions([
+    ConnectionManager::class => autowire(ConnectionManager::class),
+    SchemaCreator::class => autowire(SchemaCreator::class),
+    Schema::class => autowire(Schema::class),
+    SchemaMigrator::class => autowire(SchemaMigrator::class)
+]);
+
+$container = $builder->build();
+
+if(!file_exists('schema.config.php')) {
+    throw new RuntimeException('No config file found, please create a schema.config.php in the current working directory');
+}
+
+$schema = $container->get(Schema::class);
+$schema->setConfig(require 'schema.config.php');
+
+
+
+$schema->loadSchemaFrom($schema->config('load_from', []));
+
+$application = new Application();
+
+$application->add($container->make(MakeSchemaCommand::class));
+//$application->add($container->make(MigrateSchemaCommand::class));
+
+$application->run();

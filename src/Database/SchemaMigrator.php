@@ -8,23 +8,14 @@ use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Schema\Table;
-use Illuminate\Console\OutputStyle;
-use Illuminate\Console\View\Components\Info;
-use Illuminate\Console\View\Components\TwoColumnDetail;
-use Illuminate\Support\Collection;
 use Throwable;
-use Wyb\Lib\DB;
-use MichelJonkman\DeclarativeSchema\Console\Traits\WritesToOutput;
 use MichelJonkman\DeclarativeSchema\Exceptions\DeclarativeSchemaException;
 use MichelJonkman\DeclarativeSchema\Models\SchemaTable;
 
 class SchemaMigrator
 {
-    use WritesToOutput;
-
     protected Connection $connection;
     protected AbstractSchemaManager $schemaManager;
-    protected OutputStyle|null $output = null;
 
     /**
      * @throws Exception
@@ -47,12 +38,12 @@ class SchemaMigrator
     }
 
     /**
-     * @return \MichelJonkman\DeclarativeSchema\Database\Table[]|Collection
+     * @return \MichelJonkman\DeclarativeSchema\Database\Table[]
      * @throws DeclarativeSchemaException
      */
-    public function getDeclarations(): array|Collection
+    public function getDeclarations(): array
     {
-        $tables = collect();
+        $tables = [];
 
         $this->write(Info::class, 'Gathering declarations.');
 
@@ -270,6 +261,6 @@ class SchemaMigrator
 
     public function getSchemaPath(): string
     {
-        return base_path('database/schema');
+        return $this->schema->basePath('database/schema');
     }
 }

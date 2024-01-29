@@ -1,8 +1,8 @@
 <?php
 
-use App\Lib\Schema\Database\DeclarativeSchema;
-use App\Lib\Schema\Database\Table;
 use Doctrine\DBAL\Types\Types;
+use MichelJonkman\DeclarativeSchema\Database\DeclarativeSchema;
+use MichelJonkman\DeclarativeSchema\Database\Table;
 
 return new class extends DeclarativeSchema {
     function declare(): Table

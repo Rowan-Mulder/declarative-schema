@@ -2,6 +2,7 @@
     "name": "micheljonkman/declarative-schema",
     "version": "0.1.0",
     "description": "",
+    "type": "library",
     "keywords": [
         "MichelJonkman",
         "dbal-schema"
@@ -16,8 +17,11 @@
         }
     ],
     "require": {
-        "php": "^8.1",
-        "doctrine/dbal": "^3.6.2"
+        "php": "^8.2",
+        "doctrine/dbal": "^3.6.2",
+        "php-di/php-di": "^7.0.6",
+        "symfony/console": "^v7.0.2",
+        "jawira/case-converter": "^v3.5.0"
     },
     "require-dev": {
     },
@@ -26,6 +30,9 @@
             "MichelJonkman\\DeclarativeSchema\\": "src"
         }
     },
+    "bin": [
+        "bin/schema"
+    ],
     "config": {
         "sort-packages": true,
         "allow-plugins": {}

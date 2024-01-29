@@ -3,23 +3,18 @@
 namespace MichelJonkman\DeclarativeSchema\Database;
 
 use Closure;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Str;
 use InvalidArgumentException;
+use Jawira\CaseConverter\Convert;
 
 class SchemaCreator
 {
 
     protected array $postCreate = [];
 
-    public function __construct(protected Filesystem $files, protected ?string $customStubPath = null)
+    public function __construct(protected ?string $customStubPath = null)
     {
     }
 
-    /**
-     * @throws FileNotFoundException
-     */
     public function create(string $name, string $path, string $table = null): string
     {
         $this->ensureSchemaFileDoesntAlreadyExist($name, $path);
@@ -28,28 +23,24 @@ class SchemaCreator
 
         $path = $this->getPath($name, $path);
 
-        $this->files->ensureDirectoryExists(dirname($path));
+        if(!is_dir(dirname($path))) {
+            mkdir(dirname($path), recursive: true);
+        }
 
-        $this->files->put(
-            $path, $this->populateStub($stub, $table)
-        );
+        file_put_contents($path, $this->populateStub($stub, $table));
 
         $this->firePostCreateHooks($table, $path);
 
         return $path;
     }
 
-
-    /**
-     * @throws FileNotFoundException
-     */
     protected function ensureSchemaFileDoesntAlreadyExist(string $name, string $schemaPath = null): void
     {
         if (!empty($schemaPath)) {
-            $schemaFiles = $this->files->glob($schemaPath.'/*.php');
+            $schemaFiles = glob($schemaPath.'/*.php');
 
             foreach ($schemaFiles as $migrationFile) {
-                $this->files->requireOnce($migrationFile);
+                require_once $migrationFile;
             }
         }
 
@@ -58,16 +49,13 @@ class SchemaCreator
         }
     }
 
-    /**
-     * @throws FileNotFoundException
-     */
     protected function getStub(): string
     {
-        $stub = $this->files->exists($customPath = $this->customStubPath.'/migration.stub')
+        $stub = file_exists($customPath = $this->customStubPath.'/migration.stub')
             ? $customPath
             : $this->stubPath().'/schema.stub';
 
-        return $this->files->get($stub);
+        return file_get_contents($stub);
     }
 
     /**
@@ -90,7 +78,7 @@ class SchemaCreator
 
     protected function getClassName(string $name): string
     {
-        return Str::studly($name);
+        return (new Convert($name))->toPascal();
     }
 
     protected function getPath(string $name, string $path): string

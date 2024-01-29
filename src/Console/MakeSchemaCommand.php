@@ -3,24 +3,18 @@
 namespace MichelJonkman\DeclarativeSchema\Console;
 
 use Exception;
-use Illuminate\Console\OutputStyle;
-use Illuminate\Console\View\Components\Info;
-use Illuminate\Contracts\Console\PromptsForMissingInput;
-use Illuminate\Support\Str;
+use Jawira\CaseConverter\Convert;
+use MichelJonkman\DeclarativeSchema\Database\SchemaMigratorFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use MichelJonkman\DeclarativeSchema\Console\Traits\WritesToOutput;
 use MichelJonkman\DeclarativeSchema\Database\SchemaCreator;
 use MichelJonkman\DeclarativeSchema\Database\SchemaMigrator;
+use Symfony\Component\Console\Question\Question;
 
-class MakeSchemaCommand extends Command implements PromptsForMissingInput
+class MakeSchemaCommand extends Command
 {
-    use WritesToOutput;
-
-    protected ?OutputStyle $output = null;
-
     public function __construct(protected SchemaCreator $creator, protected SchemaMigrator $migrator)
     {
         parent::__construct();
@@ -33,24 +27,26 @@ class MakeSchemaCommand extends Command implements PromptsForMissingInput
             ->addArgument('table', InputArgument::OPTIONAL, 'The table name');
     }
 
-    protected function initialize(InputInterface $input, OutputInterface $output): void
-    {
-        $this->output = new OutputStyle($input, $output);
-    }
-
     /**
      * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $table = $input->getArgument('table');
+
         if (!$table) {
-            $table = $this->output->ask('What should the schema file be named?');
+            $helper = $this->getHelper('question');
+            $question = new Question('What should the schema file be named? ');
+
+            do {
+                $table = $helper->ask($input, $output, $question);
+            } while (!$table);
         }
 
-        $name = Str::snake(trim($table));
+        $convert = new Convert(trim($table));
+        $name = $convert->toSnake();
 
-        $this->writeSchema($name, $table);
+        $this->writeSchema($output, $name, $table);
 
         return Command::SUCCESS;
     }
@@ -58,13 +54,13 @@ class MakeSchemaCommand extends Command implements PromptsForMissingInput
     /**
      * @throws Exception
      */
-    protected function writeSchema(string $name, string $table): void
+    protected function writeSchema(OutputInterface $output, string $name, string $table): void
     {
         $file = $this->creator->create(
             $name, $this->getSchemaPath(), $table
         );
 
-        $this->write(Info::class, "Schema file [$file] created successfully.");
+        $output->writeLn("Schema file [$file] created successfully.");
     }
 
     /**
@@ -75,10 +71,5 @@ class MakeSchemaCommand extends Command implements PromptsForMissingInput
     protected function getSchemaPath(): string
     {
         return $this->migrator->getSchemaPath();
-    }
-
-    protected function getOutput(): OutputStyle
-    {
-        return $this->output;
     }
 }

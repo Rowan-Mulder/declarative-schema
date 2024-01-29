@@ -4,11 +4,15 @@ namespace MichelJonkman\DeclarativeSchema\Database;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
-use Wyb\Lib\DB;
+use MichelJonkman\DeclarativeSchema\Schema;
 
 class ConnectionManager
 {
     protected ?Connection $connection = null;
+
+    public function __construct(protected Schema $schema)
+    {
+    }
 
     public function getConnection(): Connection
     {
@@ -17,16 +21,7 @@ class ConnectionManager
 
     protected function createConnection()
     {
-        $config = DB::connection()->getConfig();
-        $connectionParams = [
-            'dbname' => $config['database'],
-            'user' => $config['username'],
-            'password' => $config['password'],
-            'host' => $config['host'],
-            'driver' => 'pdo_' . $config['driver'],
-        ];
-
-        return $this->connection = DriverManager::getConnection($connectionParams);
+        return $this->connection = DriverManager::getConnection($this->schema->config('connection', []));
     }
 
 }
