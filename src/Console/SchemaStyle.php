@@ -10,4 +10,9 @@ class SchemaStyle extends SymfonyStyle
     {
         $this->block($message, 'Success', 'fg=green', ' ');
     }
+
+    public function info(string|array $message): void
+    {
+        $this->block($message, 'Info', 'fg=bright-blue', ' ');
+    }
 }

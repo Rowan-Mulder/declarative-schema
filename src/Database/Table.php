@@ -28,8 +28,8 @@ class Table extends \Doctrine\DBAL\Schema\Table
      */
     public function addTimestamps(): void
     {
-        $this->addColumn('created_at', 'datetime')->setNotnull(false);
-        $this->addColumn('updated_at', 'datetime')->setNotnull(false);
+        $this->addColumn('created_at', 'datetime')->setDefault('CURRENT_TIMESTAMP');
+        $this->addColumn('updated_at', 'datetime')->setColumnDefinition('DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP');
     }
 
     public function after(Closure $callback): static

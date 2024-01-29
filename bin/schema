@@ -3,6 +3,7 @@
 
 use DI\ContainerBuilder;
 use MichelJonkman\DeclarativeSchema\Console\MakeSchemaCommand;
+use MichelJonkman\DeclarativeSchema\Console\MigrateSchemaCommand;
 use MichelJonkman\DeclarativeSchema\Database\ConnectionManager;
 use MichelJonkman\DeclarativeSchema\Database\SchemaCreator;
 use MichelJonkman\DeclarativeSchema\Database\SchemaMigrator;
@@ -56,6 +57,6 @@ $schema->loadSchemaFrom($schema->config('load_from', []));
 $application = new Application();
 
 $application->add($container->make(MakeSchemaCommand::class));
-//$application->add($container->make(MigrateSchemaCommand::class));
+$application->add($container->make(MigrateSchemaCommand::class));
 
 $application->run();

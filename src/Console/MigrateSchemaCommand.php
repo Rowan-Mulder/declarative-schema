@@ -4,23 +4,22 @@ namespace MichelJonkman\DeclarativeSchema\Console;
 
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\SchemaException;
-use Illuminate\Console\OutputStyle;
-use Illuminate\Console\View\Components\Info;
-use Symfony\Component\Console\Command\Command;
+use MichelJonkman\DeclarativeSchema\Database\SchemaMigrator;
+use MichelJonkman\DeclarativeSchema\Database\Table;
+use MichelJonkman\DeclarativeSchema\Schema;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
-use Wyb\App;
-use MichelJonkman\DeclarativeSchema\Console\Traits\WritesToOutput;
-use MichelJonkman\DeclarativeSchema\Database\SchemaMigrator;
 use MichelJonkman\DeclarativeSchema\Exceptions\DeclarativeSchemaException;
 
-class MigrateSchemaCommand extends Command
+class MigrateSchemaCommand extends AbstractCommand
 {
-    use WritesToOutput;
 
-    protected ?OutputStyle $output = null;
+    public function __construct(protected SchemaMigrator $migrator, protected Schema $schema)
+    {
+        parent::__construct();
+    }
 
     protected function configure(): void
     {
@@ -28,11 +27,6 @@ class MigrateSchemaCommand extends Command
             ->setAliases(['migrate'])
             ->setDescription('Migrate the declarative schema\'s')
             ->addOption('force', ['f', 'y'], InputOption::VALUE_NONE, 'Force the operation to run when in production');
-    }
-
-    protected function initialize(InputInterface $input, OutputInterface $output): void
-    {
-        $this->output = new OutputStyle($input, $output);
     }
 
     /**
@@ -44,21 +38,88 @@ class MigrateSchemaCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $force = $input->getOption('force');
-        if (!$force && !is_dev() && !$this->output->confirm('Are you sure you want to run this command in production?', false)) {
-            $this->write(Info::class, 'Migration aborted');
-            return Command::INVALID;
+        if (!$force && $this->schema->config('production', true) && !$this->io->confirm('Are you sure you want to run this command in production?', false)) {
+            $this->io->info('Migration aborted');
+            return static::INVALID;
         }
 
-        $migrator = App::make(SchemaMigrator::class);
-        $migrator->setOutput($this->getOutput());
+        $this->io->info('Gathering declarations');
+        $declarations = $this->migrator->getDeclarations();
 
-        $migrator->migrateSchema($migrator->getDeclarations());
+        $this->io->info('Calculating schema diff');
 
-        return Command::SUCCESS;
+        $oldDeclarations = $this->migrator->getOldDeclarations($declarations);
+
+        $this->displayDiff($declarations, $oldDeclarations);
+
+        $diff = $this->migrator->getDiff($oldDeclarations, $declarations);
+
+        if ($diff->isEmpty()) {
+            $this->io->info('Database already up-to-date');
+            return static::SUCCESS;
+        }
+
+        $this->io->info('Running statements');
+
+        $this->migrator->run($diff);
+
+        $this->io->info('Saving current tablenames to database');
+
+        $this->migrator->saveTables($declarations);
+
+        $callbacks = $this->migrator->getAfterCallbacks($declarations);
+
+        if ($callbacks) {
+            $this->io->info('Running after callbacks');
+
+            foreach ($callbacks as $callback) {
+                $callback();
+            }
+        }
+
+        $this->io->success('Done');
+
+        return static::SUCCESS;
     }
 
-    protected function getOutput(): OutputStyle
+    /**
+     * @param Table[] $declarations
+     * @param Table[] $oldDeclarations
+     * @return void
+     */
+    protected function displayDiff(array $declarations, array $oldDeclarations): void
     {
-        return $this->output;
+        $oldTableNames = [];
+        $newTableNames = [];
+
+        $rows = [];
+
+        foreach ($oldDeclarations as $oldDeclaration) {
+            $oldTableNames[] = $oldDeclaration->getName();
+        }
+
+        foreach ($declarations as $declaration) {
+            $newTableNames[] = $declaration->getName();
+        }
+
+        foreach ($newTableNames as $newTableName) {
+            if(!in_array($newTableName, $oldTableNames)) {
+                $rows[] = [$newTableName, '<fg=green;options=bold>NEW</>'];
+            }
+            else {
+                $rows[] = [$newTableName, '<fg=blue;options=bold>EXISTS</>'];
+            }
+        }
+
+        foreach ($oldTableNames as $oldTableName) {
+            if(!in_array($oldTableName, $newTableNames)) {
+                $rows[] = [$oldTableName, '<fg=yellow;options=bold>OLD</>'];
+            }
+        }
+
+        $this->io->table(
+            [],
+            $rows
+        );
     }
 }

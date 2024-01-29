@@ -43,7 +43,7 @@ class MakeSchemaCommand extends AbstractCommand
 
         $this->writeSchema($name, $table);
 
-        return Command::SUCCESS;
+        return static::SUCCESS;
     }
 
     /**
