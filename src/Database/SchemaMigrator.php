@@ -12,16 +12,32 @@ use MichelJonkman\DeclarativeSchema\Exceptions\DeclarativeSchemaException;
 
 class SchemaMigrator
 {
-    protected Connection $connection;
-    protected AbstractSchemaManager $schemaManager;
+    protected ?Connection $_connection = null;
+    protected ?AbstractSchemaManager $_schemaManager = null;
+
+    public function __construct(protected ConnectionManager $connectionManager, protected \MichelJonkman\DeclarativeSchema\Schema $schema)
+    {
+    }
+
+    protected function connection(): Connection
+    {
+        if (!$this->_connection) {
+            $this->_connection = $this->connectionManager->getConnection();
+        }
+
+        return $this->_connection;
+    }
 
     /**
      * @throws Exception
      */
-    public function __construct(protected ConnectionManager $connectionManager, protected \MichelJonkman\DeclarativeSchema\Schema $schema)
+    protected function schemaManager(): AbstractSchemaManager
     {
-        $this->connection = $this->connectionManager->getConnection();
-        $this->schemaManager = $this->connection->createSchemaManager();
+        if (!$this->_schemaManager) {
+            $this->_schemaManager = $this->connection()->createSchemaManager();
+        }
+
+        return $this->_schemaManager;
     }
 
     protected function getSchemaFiles(): array
@@ -38,6 +54,8 @@ class SchemaMigrator
     /**
      * @return Table[]
      * @throws DeclarativeSchemaException
+     * @throws Exception
+     * @throws SchemaException
      */
     public function getDeclarations(): array
     {
@@ -62,14 +80,14 @@ class SchemaMigrator
      * @param Table[] $oldDeclarations
      * @param Table[] $declarations
      * @return SchemaDiff
-     * @throws SchemaException
+     * @throws SchemaException|Exception
      */
     public function getDiff(array $oldDeclarations, array $declarations): SchemaDiff
     {
         $oldSchema = new Schema($oldDeclarations);
         $newSchema = new Schema($declarations);
 
-        $comparator = $this->schemaManager->createComparator();
+        $comparator = $this->schemaManager()->createComparator();
         return $comparator->compareSchemas($oldSchema, $newSchema);
     }
 
@@ -78,11 +96,11 @@ class SchemaMigrator
      */
     public function run(SchemaDiff $diff): void
     {
-        $platform = $this->connection->getDatabasePlatform();
+        $platform = $this->connection()->getDatabasePlatform();
 
         $sqlLines = $platform->getAlterSchemaSQL($diff);
 
-        $this->connection->executeStatement(implode(';', $sqlLines));
+        $this->connection()->executeStatement(implode(';', $sqlLines));
     }
 
     /**
@@ -114,13 +132,13 @@ class SchemaMigrator
         foreach ($declarations as $newTable) {
             $newTableNames[] = $tableName = $newTable->getName();
 
-            if ($this->schemaManager->tablesExist($tableName)) {
-                $oldTables[] = $this->schemaManager->introspectTable($newTable->getName());
+            if ($this->schemaManager()->tablesExist($tableName)) {
+                $oldTables[] = $this->schemaManager()->introspectTable($newTable->getName());
             }
         }
 
         if ($this->schemaTableExists()) {
-            $result = $this->connection->executeQuery("
+            $result = $this->connection()->executeQuery("
                 SELECT id, `table` FROM `{$this->getSchemaTableName()}`
             ");
 
@@ -131,7 +149,7 @@ class SchemaMigrator
                     continue;
                 }
 
-                $oldTables[] = $this->schemaManager->introspectTable($schemaTable);
+                $oldTables[] = $this->schemaManager()->introspectTable($schemaTable);
             }
         }
 
@@ -144,7 +162,7 @@ class SchemaMigrator
      */
     public function saveTables(array $declarations): void
     {
-        $result = $this->connection->executeQuery("
+        $result = $this->connection()->executeQuery("
             SELECT id, `table` FROM `{$this->getSchemaTableName()}`
         ");
 
@@ -153,7 +171,7 @@ class SchemaMigrator
 
         foreach ($newTables as $newTable) {
             if (!in_array($newTable, $currentTables)) {
-                $this->connection->executeQuery("
+                $this->connection()->executeQuery("
                     INSERT INTO `{$this->getSchemaTableName()}` SET `table` = ? ON DUPLICATE KEY UPDATE `table` = ?
                 ", [$newTable, $newTable]);
             }
@@ -161,7 +179,7 @@ class SchemaMigrator
 
         foreach ($currentTables as $currentTable) {
             if (!in_array($currentTable, $newTables)) {
-                $this->connection->executeQuery("
+                $this->connection()->executeQuery("
                     DELETE FROM `{$this->getSchemaTableName()}` WHERE `table` = ?
                 ", [$currentTable]);
             }
@@ -191,7 +209,7 @@ class SchemaMigrator
      */
     protected function schemaTableExists(): bool
     {
-        return $this->schemaManager->tablesExist([$this->getSchemaTableName()]);
+        return $this->schemaManager()->tablesExist([$this->getSchemaTableName()]);
     }
 
     public function getSchemaTableName(): string
