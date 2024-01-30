@@ -3,6 +3,7 @@
 namespace MichelJonkman\DeclarativeSchema\Console;
 
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Schema\SchemaDiff;
 use Doctrine\DBAL\Schema\SchemaException;
 use MichelJonkman\DeclarativeSchema\Database\SchemaMigrator;
 use MichelJonkman\DeclarativeSchema\Database\Table;
@@ -37,12 +38,6 @@ class MigrateSchemaCommand extends AbstractCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $force = $input->getOption('force');
-        if (!$force && $this->schema->config('production', true) && !$this->io->confirm('Are you sure you want to run this command in production?', false)) {
-            $this->io->info('Migration aborted');
-            return static::INVALID;
-        }
-
         $this->io->info('Gathering declarations');
         $declarations = $this->migrator->getDeclarations();
 
@@ -50,13 +45,19 @@ class MigrateSchemaCommand extends AbstractCommand
 
         $oldDeclarations = $this->migrator->getOldDeclarations($declarations);
 
-        $this->displayDiff($declarations, $oldDeclarations);
-
         $diff = $this->migrator->getDiff($oldDeclarations, $declarations);
+
+        $this->displayDiffNew($oldDeclarations, $diff);
 
         if ($diff->isEmpty()) {
             $this->io->info('Database already up-to-date');
             return static::SUCCESS;
+        }
+
+        $force = $input->getOption('force');
+        if (!$force && $this->schema->config('production', true) && !$this->io->confirm('Are you sure you want to run this command in production?', false)) {
+            $this->io->info('Migration aborted');
+            return static::INVALID;
         }
 
         $this->io->info('Running statements');
@@ -83,38 +84,44 @@ class MigrateSchemaCommand extends AbstractCommand
     }
 
     /**
-     * @param Table[] $declarations
      * @param Table[] $oldDeclarations
+     * @param SchemaDiff $diff
      * @return void
      */
-    protected function displayDiff(array $declarations, array $oldDeclarations): void
+    protected function displayDiffNew(array $oldDeclarations, SchemaDiff $diff): void
     {
-        $oldTableNames = [];
-        $newTableNames = [];
+        $addedTableNames = [];
+        $changedTableNames = [];
+        $removedTableNames = [];
+
+        foreach ($diff->newTables as $newTable) {
+            $addedTableNames[] = $newTable->getName();
+        }
+
+        foreach ($diff->changedTables as $changedTable) {
+            $changedTableNames[] = $changedTable->getOldTable()->getName();
+        }
+
+        foreach ($diff->removedTables as $removedTable) {
+            $removedTableNames[] = $removedTable->getName();
+        }
 
         $rows = [];
 
         foreach ($oldDeclarations as $oldDeclaration) {
-            $oldTableNames[] = $oldDeclaration->getName();
-        }
+            $oldName = $oldDeclaration->getName();
 
-        foreach ($declarations as $declaration) {
-            $newTableNames[] = $declaration->getName();
-        }
-
-        foreach ($newTableNames as $newTableName) {
-            if(!in_array($newTableName, $oldTableNames)) {
-                $rows[] = [$newTableName, '<fg=green;options=bold>NEW</>'];
-            }
-            else {
-                $rows[] = [$newTableName, '<fg=blue;options=bold>EXISTS</>'];
+            if (in_array($oldName, $changedTableNames)) {
+                $rows[] = [$oldName, '<fg=blue;options=bold>CHANGED</>'];
+            } elseif (in_array($oldName, $removedTableNames)) {
+                $rows[] = [$oldName, '<fg=red;options=bold>REMOVED</>'];
+            } else {
+                $rows[] = [$oldName, '<options=bold>UNCHANGED</>'];
             }
         }
 
-        foreach ($oldTableNames as $oldTableName) {
-            if(!in_array($oldTableName, $newTableNames)) {
-                $rows[] = [$oldTableName, '<fg=yellow;options=bold>OLD</>'];
-            }
+        foreach ($addedTableNames as $addedTableName) {
+            $rows[] = [$addedTableName, '<fg=green;options=bold>ADDED</>'];
         }
 
         $this->io->table(

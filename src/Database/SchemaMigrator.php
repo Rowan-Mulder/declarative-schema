@@ -92,12 +92,12 @@ class SchemaMigrator
     protected function prepareSchemaTable(): Table
     {
         $table = new Table($this->getSchemaTableName());
-        $table->addId();
+        $table->id();
 
         $table->addColumn('table', 'string');
         $table->addUniqueIndex(['table']);
 
-        $table->addTimestamps();
+        $table->timestamps();
 
         return $table;
     }

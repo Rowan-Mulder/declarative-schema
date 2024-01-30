@@ -18,7 +18,7 @@
     ],
     "require": {
         "php": "^8.2",
-        "doctrine/dbal": "^3.6.2",
+        "doctrine/dbal": "^3.8.0",
         "php-di/php-di": "^7.0.6",
         "symfony/console": "^v7.0.2",
         "jawira/case-converter": "^v3.5.0"
