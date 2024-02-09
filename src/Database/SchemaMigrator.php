@@ -31,7 +31,7 @@ class SchemaMigrator
     /**
      * @throws Exception
      */
-    protected function schemaManager(): AbstractSchemaManager
+    public function schemaManager(): AbstractSchemaManager
     {
         if (!$this->_schemaManager) {
             $this->_schemaManager = $this->connection()->createSchemaManager();

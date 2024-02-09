@@ -54,10 +54,10 @@ class Table extends \Doctrine\DBAL\Schema\Table
     /**
      * @throws SchemaException|Exception
      */
-    public function timestamps(): void
+    public function timestamps(bool $nullable = true): void
     {
-        $this->addColumn('created_at', 'datetime')->setDefault('CURRENT_TIMESTAMP');
-        $this->addColumn('updated_at', 'datetime')->setDefault('CURRENT_TIMESTAMP');
+        $this->addColumn('created_at', 'datetime')->setDefault('CURRENT_TIMESTAMP')->nullable($nullable);
+        $this->addColumn('updated_at', 'datetime')->setDefault('CURRENT_TIMESTAMP')->nullable($nullable);
     }
 
 

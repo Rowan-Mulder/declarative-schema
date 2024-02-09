@@ -1,11 +1,10 @@
 <?php
 
-use Doctrine\DBAL\Types\Types;
 use MichelJonkman\DeclarativeSchema\Database\DeclarativeSchema;
 use MichelJonkman\DeclarativeSchema\Database\Table;
 
 return new class extends DeclarativeSchema {
-    function declare(): Table
+    public function declare(): Table
     {
         $table = new Table('{{table}}');
 
