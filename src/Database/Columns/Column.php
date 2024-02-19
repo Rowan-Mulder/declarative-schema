@@ -13,7 +13,7 @@ class Column extends \Doctrine\DBAL\Schema\Column
         parent::__construct($name, $type, $options);
     }
 
-    public function nullable(bool $nullable = true): Column
+    public function nullable(bool $nullable = true): static
     {
         return parent::setNotnull(!$nullable);
     }
@@ -21,7 +21,7 @@ class Column extends \Doctrine\DBAL\Schema\Column
     /**
      * @deprecated Use nullable()
      */
-    public function setNotnull($notnull): Column
+    public function setNotnull($notnull): static
     {
         return parent::setNotnull($notnull);
     }
@@ -56,17 +56,17 @@ class Column extends \Doctrine\DBAL\Schema\Column
         return $this;
     }
 
-    public function comment(string $comment): Column
+    public function comment(string $comment): static
     {
         return $this->setComment($comment);
     }
 
-    public function default(mixed $value): Column
+    public function default(mixed $value): static
     {
         return $this->setDefault($value);
     }
 
-    public function unsigned(bool $unsigned = true): Column
+    public function unsigned(bool $unsigned = true): static
     {
         return $this->setUnsigned($unsigned);
     }
