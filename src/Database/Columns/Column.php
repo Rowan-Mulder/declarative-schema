@@ -1,9 +1,10 @@
 <?php
 
-namespace MichelJonkman\DeclarativeSchema\Database;
+namespace MichelJonkman\DeclarativeSchema\Database\Columns;
 
 use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Types\Type;
+use MichelJonkman\DeclarativeSchema\Database\Table;
 
 class Column extends \Doctrine\DBAL\Schema\Column
 {
@@ -63,5 +64,10 @@ class Column extends \Doctrine\DBAL\Schema\Column
     public function default(mixed $value): Column
     {
         return $this->setDefault($value);
+    }
+
+    public function unsigned(bool $unsigned = true): Column
+    {
+        return $this->setUnsigned($unsigned);
     }
 }

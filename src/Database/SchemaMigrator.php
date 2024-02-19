@@ -8,6 +8,7 @@ use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\SchemaDiff;
 use Doctrine\DBAL\Schema\SchemaException;
+use Doctrine\DBAL\Types\Type;
 use MichelJonkman\DeclarativeSchema\Exceptions\DeclarativeSchemaException;
 
 class SchemaMigrator

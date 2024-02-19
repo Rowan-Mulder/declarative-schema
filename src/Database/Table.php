@@ -3,95 +3,13 @@
 namespace MichelJonkman\DeclarativeSchema\Database;
 
 use Closure;
-use Doctrine\DBAL\Exception;
-use Doctrine\DBAL\Schema\SchemaException;
-use Doctrine\DBAL\Types\Type;
+use MichelJonkman\DeclarativeSchema\Database\Traits\TableColumns\StoresColumns;
 
 class Table extends \Doctrine\DBAL\Schema\Table
 {
+    use StoresColumns;
+
     protected ?Closure $after = null;
-
-    /**
-     * @param string  $name
-     * @param string  $typeName
-     * @param array $options
-     *
-     * @return Column
-     *
-     * @throws SchemaException|Exception
-     */
-    public function addColumn($name, $typeName, array $options = []): Column
-    {
-        $column = new Column($name, Type::getType($typeName), $this, $options);
-
-        $this->_addColumn($column);
-
-        return $column;
-    }
-
-    /**
-     * @throws SchemaException|Exception
-     */
-    public function id(string $name = null): Column
-    {
-        $name = $name ?: 'id';
-
-        $column = $this->addColumn($name, 'integer', ['unsigned' => true])->setAutoincrement(true);
-        $this->setPrimaryKey([$name]);
-
-        return $column;
-    }
-
-    /**
-     * @deprecated use id()
-     * @throws SchemaException|Exception
-     */
-    public function addId(string $name = null): Column
-    {
-        return $this->id($name);
-    }
-
-    /**
-     * @throws SchemaException|Exception
-     */
-    public function timestamps(bool $nullable = true): void
-    {
-        $this->addColumn('created_at', 'datetime')->setDefault('CURRENT_TIMESTAMP')->nullable($nullable);
-        $this->addColumn('updated_at', 'datetime')->setDefault('CURRENT_TIMESTAMP')->nullable($nullable);
-    }
-
-
-    /**
-     * @deprecated Use timestamps()
-     * @throws SchemaException|Exception
-     */
-    public function addTimestamps(): void
-    {
-        $this->timestamps();
-    }
-
-    /**
-     * @throws SchemaException
-     * @throws Exception
-     */
-    public function string($column, $length = null): Column
-    {
-        return $this->addColumn($column, 'string', [
-            'length' => $length
-        ]);
-    }
-
-    /**
-     * @throws SchemaException
-     * @throws Exception
-     */
-    public function integer($column, $autoIncrement = false, $unsigned = false): Column
-    {
-        return $this->addColumn($column, 'integer', [
-            'autoincrement' => $autoIncrement,
-            'unsigned' => $unsigned,
-        ]);
-    }
 
     /**
      * A callback to run after running the migrator, will run even there were no changes
