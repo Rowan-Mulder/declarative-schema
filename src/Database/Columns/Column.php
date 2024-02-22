@@ -70,4 +70,9 @@ class Column extends \Doctrine\DBAL\Schema\Column
     {
         return $this->setUnsigned($unsigned);
     }
+
+    public function length(int $length): static
+    {
+        return $this->setLength($length);
+    }
 }

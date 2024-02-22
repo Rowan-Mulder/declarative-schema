@@ -1,0 +1,15 @@
+<?php
+
+use MichelJonkman\DeclarativeSchema\Database\DeclarativeSchema;
+use MichelJonkman\DeclarativeSchema\Database\Table;
+
+return new class extends DeclarativeSchema {
+    public function declare(): Table
+    {
+        $table = new Table('{{table}}');
+
+        {{content}}
+
+        return $table;
+    }
+};

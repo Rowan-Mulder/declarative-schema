@@ -2,9 +2,11 @@
 <?php
 
 use DI\ContainerBuilder;
+use MichelJonkman\DeclarativeSchema\Console\GenerateSchemaCommand;
 use MichelJonkman\DeclarativeSchema\Console\MakeSchemaCommand;
 use MichelJonkman\DeclarativeSchema\Console\MigrateSchemaCommand;
 use MichelJonkman\DeclarativeSchema\Database\ConnectionManager;
+use MichelJonkman\DeclarativeSchema\Database\Generator\SchemaGenerator;
 use MichelJonkman\DeclarativeSchema\Database\SchemaCreator;
 use MichelJonkman\DeclarativeSchema\Database\SchemaMigrator;
 use MichelJonkman\DeclarativeSchema\Schema;
@@ -38,7 +40,8 @@ $builder->addDefinitions([
     ConnectionManager::class => autowire(ConnectionManager::class),
     SchemaCreator::class => autowire(SchemaCreator::class),
     Schema::class => autowire(Schema::class),
-    SchemaMigrator::class => autowire(SchemaMigrator::class)
+    SchemaMigrator::class => autowire(SchemaMigrator::class),
+    SchemaGenerator::class => autowire(SchemaGenerator::class),
 ]);
 
 $container = $builder->build();
@@ -58,5 +61,6 @@ $application = new Application();
 
 $application->add($container->make(MakeSchemaCommand::class));
 $application->add($container->make(MigrateSchemaCommand::class));
+$application->add($container->make(GenerateSchemaCommand::class));
 
 $application->run();

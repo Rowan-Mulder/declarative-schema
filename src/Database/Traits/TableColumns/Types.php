@@ -3,6 +3,7 @@
 namespace MichelJonkman\DeclarativeSchema\Database\Traits\TableColumns;
 
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Types\Types as Type;
 use MichelJonkman\DeclarativeSchema\Database\Columns\Column;
@@ -27,7 +28,7 @@ trait Types
     public function tinyText(string $column): Column
     {
         return $this->addColumn($column, 'text', [
-            'length' => 255
+            'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT
         ]);
     }
 
@@ -38,7 +39,7 @@ trait Types
     public function text(string $column): Column
     {
         return $this->addColumn($column, 'text', [
-            'length' => 65535
+            'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT
         ]);
     }
 
@@ -49,7 +50,7 @@ trait Types
     public function mediumText(string $column): Column
     {
         return $this->addColumn($column, 'text', [
-            'length' => 16777215
+            'length' => AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT
         ]);
     }
 
@@ -177,7 +178,7 @@ trait Types
      * @throws Exception
      * @throws SchemaException
      */
-    public function unsignedDouble(string $column, int $total = 8, int $places = 2, bool $unsigned = false): Column
+    public function unsignedDouble(string $column, int $total = 8, int $places = 2): Column
     {
         return $this->double($column, $total, $places, true);
     }
@@ -186,7 +187,7 @@ trait Types
      * @throws Exception
      * @throws SchemaException
      */
-    public function unsignedDecimal(string $column, int $total = 8, int $places = 2, bool $unsigned = false): Column
+    public function unsignedDecimal(string $column, int $total = 8, int $places = 2): Column
     {
         return $this->decimal($column, $total, $places, true);
     }
