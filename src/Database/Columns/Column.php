@@ -2,6 +2,7 @@
 
 namespace MichelJonkman\DeclarativeSchema\Database\Columns;
 
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Types\Type;
 use MichelJonkman\DeclarativeSchema\Database\Table;
@@ -74,5 +75,15 @@ class Column extends \Doctrine\DBAL\Schema\Column
     public function length(int $length): static
     {
         return $this->setLength($length);
+    }
+
+    /**
+     * For example: string('created_at_year')->virtual('YEAR(created_at)')
+     */
+    public function virtualAs(string $expression): void
+    {
+        $columnDeclaration = $this->getType()->getSQLDeclaration([$this], new MySQLPlatform());
+
+        $this->nullable()->setColumnDefinition("$columnDeclaration AS ($expression) VIRTUAL");
     }
 }
