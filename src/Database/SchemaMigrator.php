@@ -113,8 +113,7 @@ class SchemaMigrator
         $table = new Table($this->getSchemaTableName());
         $table->id();
 
-        $table->addColumn('table', 'string');
-        $table->addUniqueIndex(['table']);
+        $table->string('table')->unique();
 
         $table->timestamps();
 
@@ -133,7 +132,7 @@ class SchemaMigrator
         foreach ($declarations as $newTable) {
             $newTableNames[] = $tableName = $newTable->getName();
 
-            if ($this->schemaManager()->tablesExist($tableName)) {
+            if ($this->schemaManager()->tablesExist([$tableName])) {
                 $oldTables[] = $this->schemaManager()->introspectTable($newTable->getName());
             }
         }

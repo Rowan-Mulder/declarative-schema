@@ -82,7 +82,7 @@ class Column extends \Doctrine\DBAL\Schema\Column
      */
     public function virtualAs(string $expression): void
     {
-        $columnDeclaration = $this->getType()->getSQLDeclaration([$this], new MySQLPlatform());
+        $columnDeclaration = $this->getType()->getSQLDeclaration($this->toArray(), new MySQLPlatform());
 
         $this->nullable()->setColumnDefinition("$columnDeclaration AS ($expression) VIRTUAL");
     }

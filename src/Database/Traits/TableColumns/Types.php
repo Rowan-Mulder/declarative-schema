@@ -14,7 +14,7 @@ trait Types
      * @throws SchemaException
      * @throws Exception
      */
-    public function string(string $column, ?int $length = null): Column
+    public function string(string $column, int $length = 255): Column
     {
         return $this->addColumn($column, Type::STRING, [
             'length' => $length
@@ -250,8 +250,10 @@ trait Types
      * @throws SchemaException
      * @throws Exception
      */
-    public function binary(string $column): Column
+    public function binary(string $column, int $length = 255): Column
     {
-        return $this->addColumn($column, Type::BINARY);
+        return $this->addColumn($column, Type::BINARY, [
+            'length' => $length
+        ]);
     }
 }

@@ -94,15 +94,15 @@ class MigrateSchemaCommand extends AbstractCommand
         $changedTableNames = [];
         $removedTableNames = [];
 
-        foreach ($diff->newTables as $newTable) {
+        foreach ($diff->getCreatedTables() as $newTable) {
             $addedTableNames[] = $newTable->getName();
         }
 
-        foreach ($diff->changedTables as $changedTable) {
+        foreach ($diff->getAlteredTables() as $changedTable) {
             $changedTableNames[] = $changedTable->getOldTable()->getName();
         }
 
-        foreach ($diff->removedTables as $removedTable) {
+        foreach ($diff->getDroppedTables() as $removedTable) {
             $removedTableNames[] = $removedTable->getName();
         }
 
