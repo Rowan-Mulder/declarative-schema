@@ -101,7 +101,9 @@ class SchemaMigrator
 
         $sqlLines = $platform->getAlterSchemaSQL($diff);
 
+        $this->connection()->executeStatement('SET FOREIGN_KEY_CHECKS = 0;');
         $this->connection()->executeStatement(implode(';', $sqlLines));
+        $this->connection()->executeStatement('SET FOREIGN_KEY_CHECKS = 1;');
     }
 
     /**
