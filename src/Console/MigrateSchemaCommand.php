@@ -27,6 +27,7 @@ class MigrateSchemaCommand extends AbstractCommand
         $this->setName('migrate:schema')
             ->setAliases(['migrate'])
             ->setDescription('Migrate the declarative schema\'s')
+//            ->addOption('verbose', ['v'], InputOption::VALUE_NONE, 'Verbose output, shows the queries that will run before confirmation')
             ->addOption('force', ['f', 'y'], InputOption::VALUE_NONE, 'Force the operation to run when in production');
     }
 
@@ -47,11 +48,18 @@ class MigrateSchemaCommand extends AbstractCommand
 
         $diff = $this->migrator->getDiff($oldDeclarations, $declarations);
 
-        $this->displayDiffNew($oldDeclarations, $diff);
-
         if ($diff->isEmpty()) {
             $this->io->info('Database already up-to-date');
             return static::SUCCESS;
+        }
+
+        $this->displayDiffNew($oldDeclarations, $diff);
+
+        $verbose = $input->getOption('verbose');
+        if ($verbose) {
+            foreach ($this->migrator->getSqlLines($diff) as $sqlLine) {
+                $this->io->note($sqlLine);
+            }
         }
 
         $force = $input->getOption('force');

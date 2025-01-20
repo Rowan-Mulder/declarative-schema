@@ -16,7 +16,10 @@ class SchemaMigrator
     protected ?Connection $_connection = null;
     protected ?AbstractSchemaManager $_schemaManager = null;
 
-    public function __construct(protected ConnectionManager $connectionManager, protected \MichelJonkman\DeclarativeSchema\Schema $schema)
+    public function __construct(
+        protected ConnectionManager $connectionManager,
+        protected \MichelJonkman\DeclarativeSchema\Schema $schema
+    )
     {
     }
 
@@ -92,17 +95,19 @@ class SchemaMigrator
         return $comparator->compareSchemas($oldSchema, $newSchema);
     }
 
+    public function getSqlLines(SchemaDiff $diff): array
+    {
+        $platform = $this->connection()->getDatabasePlatform();
+        return $platform->getAlterSchemaSQL($diff);
+    }
+
     /**
      * @throws Exception
      */
     public function run(SchemaDiff $diff): void
     {
-        $platform = $this->connection()->getDatabasePlatform();
-
-        $sqlLines = $platform->getAlterSchemaSQL($diff);
-
         $this->connection()->executeStatement('SET FOREIGN_KEY_CHECKS = 0;');
-        $this->connection()->executeStatement(implode(';', $sqlLines));
+        $this->connection()->executeStatement(implode(';', $this->getSqlLines($diff)));
         $this->connection()->executeStatement('SET FOREIGN_KEY_CHECKS = 1;');
     }
 
