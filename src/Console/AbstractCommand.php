@@ -1,6 +1,6 @@
 <?php
 
-namespace MichelJonkman\DeclarativeSchema\Console;
+namespace RowanMulder\DeclarativeSchema\Console;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

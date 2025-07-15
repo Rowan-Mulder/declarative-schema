@@ -1,18 +1,18 @@
 <?php
 
-namespace MichelJonkman\DeclarativeSchema\Console;
+namespace RowanMulder\DeclarativeSchema\Console;
 
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\SchemaDiff;
 use Doctrine\DBAL\Schema\SchemaException;
-use MichelJonkman\DeclarativeSchema\Database\SchemaMigrator;
-use MichelJonkman\DeclarativeSchema\Database\Table;
-use MichelJonkman\DeclarativeSchema\Schema;
+use RowanMulder\DeclarativeSchema\Database\SchemaMigrator;
+use RowanMulder\DeclarativeSchema\Database\Table;
+use RowanMulder\DeclarativeSchema\Schema;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
-use MichelJonkman\DeclarativeSchema\Exceptions\DeclarativeSchemaException;
+use RowanMulder\DeclarativeSchema\Exceptions\DeclarativeSchemaException;
 
 class MigrateSchemaCommand extends AbstractCommand
 {

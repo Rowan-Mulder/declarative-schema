@@ -1,6 +1,6 @@
 <?php
 
-namespace MichelJonkman\DeclarativeSchema\Database\Generator\Types;
+namespace RowanMulder\DeclarativeSchema\Database\Generator\Types;
 
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\DBAL\Schema\Column;

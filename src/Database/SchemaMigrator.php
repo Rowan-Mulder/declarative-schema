@@ -1,6 +1,6 @@
 <?php
 
-namespace MichelJonkman\DeclarativeSchema\Database;
+namespace RowanMulder\DeclarativeSchema\Database;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
@@ -9,7 +9,7 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\SchemaDiff;
 use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Types\Type;
-use MichelJonkman\DeclarativeSchema\Exceptions\DeclarativeSchemaException;
+use RowanMulder\DeclarativeSchema\Exceptions\DeclarativeSchemaException;
 
 class SchemaMigrator
 {
@@ -18,7 +18,7 @@ class SchemaMigrator
 
     public function __construct(
         protected ConnectionManager $connectionManager,
-        protected \MichelJonkman\DeclarativeSchema\Schema $schema
+        protected \RowanMulder\DeclarativeSchema\Schema $schema
     )
     {
     }

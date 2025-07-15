@@ -2,14 +2,14 @@
 <?php
 
 use DI\ContainerBuilder;
-use MichelJonkman\DeclarativeSchema\Console\GenerateSchemaCommand;
-use MichelJonkman\DeclarativeSchema\Console\MakeSchemaCommand;
-use MichelJonkman\DeclarativeSchema\Console\MigrateSchemaCommand;
-use MichelJonkman\DeclarativeSchema\Database\ConnectionManager;
-use MichelJonkman\DeclarativeSchema\Database\Generator\SchemaGenerator;
-use MichelJonkman\DeclarativeSchema\Database\SchemaCreator;
-use MichelJonkman\DeclarativeSchema\Database\SchemaMigrator;
-use MichelJonkman\DeclarativeSchema\Schema;
+use RowanMulder\DeclarativeSchema\Console\GenerateSchemaCommand;
+use RowanMulder\DeclarativeSchema\Console\MakeSchemaCommand;
+use RowanMulder\DeclarativeSchema\Console\MigrateSchemaCommand;
+use RowanMulder\DeclarativeSchema\Database\ConnectionManager;
+use RowanMulder\DeclarativeSchema\Database\Generator\SchemaGenerator;
+use RowanMulder\DeclarativeSchema\Database\SchemaCreator;
+use RowanMulder\DeclarativeSchema\Database\SchemaMigrator;
+use RowanMulder\DeclarativeSchema\Schema;
 use Symfony\Component\Console\Application;
 use function DI\autowire;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace MichelJonkman\DeclarativeSchema\Database\Columns;
+namespace RowanMulder\DeclarativeSchema\Database\Columns;
 
 use Doctrine\DBAL\Schema\SchemaException;
 

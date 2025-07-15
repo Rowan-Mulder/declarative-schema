@@ -1,6 +1,6 @@
 <?php
 
-namespace MichelJonkman\DeclarativeSchema\Console;
+namespace RowanMulder\DeclarativeSchema\Console;
 
 use Exception;
 use Jawira\CaseConverter\Convert;
@@ -8,8 +8,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use MichelJonkman\DeclarativeSchema\Database\SchemaCreator;
-use MichelJonkman\DeclarativeSchema\Database\SchemaMigrator;
+use RowanMulder\DeclarativeSchema\Database\SchemaCreator;
+use RowanMulder\DeclarativeSchema\Database\SchemaMigrator;
 
 class MakeSchemaCommand extends AbstractCommand
 {

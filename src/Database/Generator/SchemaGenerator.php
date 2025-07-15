@@ -1,25 +1,25 @@
 <?php
 
-namespace MichelJonkman\DeclarativeSchema\Database\Generator;
+namespace RowanMulder\DeclarativeSchema\Database\Generator;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
 use Generator;
-use MichelJonkman\DeclarativeSchema\Database\ConnectionManager;
-use MichelJonkman\DeclarativeSchema\Database\Generator\Types\AbstractColumnGenerator;
-use MichelJonkman\DeclarativeSchema\Database\Generator\Types\BinaryColumnGenerator;
-use MichelJonkman\DeclarativeSchema\Database\Generator\Types\BooleanColumnGenerator;
-use MichelJonkman\DeclarativeSchema\Database\Generator\Types\DateColumnGenerator;
-use MichelJonkman\DeclarativeSchema\Database\Generator\Types\DateTimeColumnGenerator;
-use MichelJonkman\DeclarativeSchema\Database\Generator\Types\DateTimeTzColumnGenerator;
-use MichelJonkman\DeclarativeSchema\Database\Generator\Types\FloatColumnGenerator;
-use MichelJonkman\DeclarativeSchema\Database\Generator\Types\IntegerColumnGenerator;
-use MichelJonkman\DeclarativeSchema\Database\Generator\Types\JsonColumnGenerator;
-use MichelJonkman\DeclarativeSchema\Database\Generator\Types\StringColumnGenerator;
-use MichelJonkman\DeclarativeSchema\Database\Generator\Types\TextColumnGenerator;
-use MichelJonkman\DeclarativeSchema\Database\Generator\Types\TimeColumnGenerator;
-use MichelJonkman\DeclarativeSchema\Exceptions\Exception;
-use MichelJonkman\DeclarativeSchema\Schema;
+use RowanMulder\DeclarativeSchema\Database\ConnectionManager;
+use RowanMulder\DeclarativeSchema\Database\Generator\Types\AbstractColumnGenerator;
+use RowanMulder\DeclarativeSchema\Database\Generator\Types\BinaryColumnGenerator;
+use RowanMulder\DeclarativeSchema\Database\Generator\Types\BooleanColumnGenerator;
+use RowanMulder\DeclarativeSchema\Database\Generator\Types\DateColumnGenerator;
+use RowanMulder\DeclarativeSchema\Database\Generator\Types\DateTimeColumnGenerator;
+use RowanMulder\DeclarativeSchema\Database\Generator\Types\DateTimeTzColumnGenerator;
+use RowanMulder\DeclarativeSchema\Database\Generator\Types\FloatColumnGenerator;
+use RowanMulder\DeclarativeSchema\Database\Generator\Types\IntegerColumnGenerator;
+use RowanMulder\DeclarativeSchema\Database\Generator\Types\JsonColumnGenerator;
+use RowanMulder\DeclarativeSchema\Database\Generator\Types\StringColumnGenerator;
+use RowanMulder\DeclarativeSchema\Database\Generator\Types\TextColumnGenerator;
+use RowanMulder\DeclarativeSchema\Database\Generator\Types\TimeColumnGenerator;
+use RowanMulder\DeclarativeSchema\Exceptions\Exception;
+use RowanMulder\DeclarativeSchema\Schema;
 
 class SchemaGenerator
 {

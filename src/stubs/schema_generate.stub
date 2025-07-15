@@ -1,7 +1,7 @@
 <?php
 
-use MichelJonkman\DeclarativeSchema\Database\DeclarativeSchema;
-use MichelJonkman\DeclarativeSchema\Database\Table;
+use RowanMulder\DeclarativeSchema\Database\DeclarativeSchema;
+use RowanMulder\DeclarativeSchema\Database\Table;
 
 return new class extends DeclarativeSchema {
     public function declare(): Table

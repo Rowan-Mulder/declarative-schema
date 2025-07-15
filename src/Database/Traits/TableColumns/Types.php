@@ -1,12 +1,12 @@
 <?php
 
-namespace MichelJonkman\DeclarativeSchema\Database\Traits\TableColumns;
+namespace RowanMulder\DeclarativeSchema\Database\Traits\TableColumns;
 
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Types\Types as Type;
-use MichelJonkman\DeclarativeSchema\Database\Columns\Column;
+use RowanMulder\DeclarativeSchema\Database\Columns\Column;
 
 trait Types
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace MichelJonkman\DeclarativeSchema\Database;
+namespace RowanMulder\DeclarativeSchema\Database;
 
 use Closure;
 use InvalidArgumentException;
 use Jawira\CaseConverter\Convert;
-use MichelJonkman\DeclarativeSchema\Exceptions\Exception;
+use RowanMulder\DeclarativeSchema\Exceptions\Exception;
 
 class SchemaCreator
 {

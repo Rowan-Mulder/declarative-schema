@@ -1,9 +1,9 @@
 <?php
 
-namespace MichelJonkman\DeclarativeSchema\Database;
+namespace RowanMulder\DeclarativeSchema\Database;
 
 use Closure;
-use MichelJonkman\DeclarativeSchema\Database\Traits\TableColumns\StoresColumns;
+use RowanMulder\DeclarativeSchema\Database\Traits\TableColumns\StoresColumns;
 
 class Table extends \Doctrine\DBAL\Schema\Table
 {

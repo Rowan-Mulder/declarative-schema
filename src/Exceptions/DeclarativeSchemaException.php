@@ -1,6 +1,6 @@
 <?php
 
-namespace MichelJonkman\DeclarativeSchema\Exceptions;
+namespace RowanMulder\DeclarativeSchema\Exceptions;
 
 class DeclarativeSchemaException extends Exception
 {

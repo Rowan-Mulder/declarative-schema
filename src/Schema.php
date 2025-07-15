@@ -1,8 +1,8 @@
 <?php
 
-namespace MichelJonkman\DeclarativeSchema;
+namespace RowanMulder\DeclarativeSchema;
 
-use MichelJonkman\DeclarativeSchema\Exceptions\Exception;
+use RowanMulder\DeclarativeSchema\Exceptions\Exception;
 
 class Schema
 {

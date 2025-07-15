@@ -1,10 +1,10 @@
 <?php
 
-namespace MichelJonkman\DeclarativeSchema\Database;
+namespace RowanMulder\DeclarativeSchema\Database;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
-use MichelJonkman\DeclarativeSchema\Schema;
+use RowanMulder\DeclarativeSchema\Schema;
 
 class ConnectionManager
 {

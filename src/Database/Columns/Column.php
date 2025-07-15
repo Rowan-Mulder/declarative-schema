@@ -1,11 +1,11 @@
 <?php
 
-namespace MichelJonkman\DeclarativeSchema\Database\Columns;
+namespace RowanMulder\DeclarativeSchema\Database\Columns;
 
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Types\Type;
-use MichelJonkman\DeclarativeSchema\Database\Table;
+use RowanMulder\DeclarativeSchema\Database\Table;
 
 class Column extends \Doctrine\DBAL\Schema\Column
 {

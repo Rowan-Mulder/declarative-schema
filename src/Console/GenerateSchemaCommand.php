@@ -1,9 +1,9 @@
 <?php
 
-namespace MichelJonkman\DeclarativeSchema\Console;
+namespace RowanMulder\DeclarativeSchema\Console;
 
-use MichelJonkman\DeclarativeSchema\Database\Generator\SchemaGenerator;
-use MichelJonkman\DeclarativeSchema\Exceptions\Exception;
+use RowanMulder\DeclarativeSchema\Database\Generator\SchemaGenerator;
+use RowanMulder\DeclarativeSchema\Exceptions\Exception;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
