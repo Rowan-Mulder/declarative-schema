@@ -1,18 +1,18 @@
 {
-    "name": "micheljonkman/declarative-schema",
+    "name": "rowanmulder/declarative-schema",
     "version": "1.5.0",
-    "description": "",
+    "description": "A fork from micheljonkman/declarative-schema",
     "type": "library",
     "keywords": [
-        "MichelJonkman",
+        "RowanMulder",
         "dbal-schema"
     ],
-    "homepage": "https://github.com/micheljonkman/declarative-schema",
+    "homepage": "https://github.com/rowan-mulder/declarative-schema",
     "license": "MIT",
     "authors": [
         {
-            "name": "Michel Jonkman",
-            "email": "mj.99@live.nl",
+            "name": "Rowan Mulder",
+            "email": "rowanmulder94@hotmail.com",
             "role": "Developer"
         }
     ],
@@ -27,7 +27,7 @@
     },
     "autoload": {
         "psr-4": {
-            "MichelJonkman\\DeclarativeSchema\\": "src"
+            "RowanMulder\\DeclarativeSchema\\": "src"
         }
     },
     "bin": [
